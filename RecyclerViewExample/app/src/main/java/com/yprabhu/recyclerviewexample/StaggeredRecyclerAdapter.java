@@ -11,12 +11,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolder> {
+public class StaggeredRecyclerAdapter extends RecyclerView.Adapter<StaggeredRecyclerAdapter.ViewHolder> {
 
-    private List<ViewModel> items;
+    private List<String> items;
     private int itemLayout;
 
-    public MyRecyclerAdapter(List<ViewModel> items, int itemLayout) {
+    public StaggeredRecyclerAdapter(List<String> items, int itemLayout) {
         this.items = items;
         this.itemLayout = itemLayout;
     }
@@ -27,9 +27,8 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
-        ViewModel item = items.get(position);
-        holder.text.setText(item.getText());
-        Picasso.with(holder.image.getContext()).load(item.getUrl()).into(holder.image);
+        String item = items.get(position);
+        holder.text.setText(item);
         holder.itemView.setTag(item);
     }
 
@@ -38,22 +37,20 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView image;
         public TextView text;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            image = (ImageView) itemView.findViewById(R.id.image);
             text = (TextView) itemView.findViewById(R.id.text);
         }
     }
 
-    public void add(ViewModel item, int position) {
+    public void add(String item, int position) {
         items.add(position, item);
         notifyItemInserted(position);
     }
 
-    public void remove(ViewModel item) {
+    public void remove(String item) {
         int position = items.indexOf(item);
         items.remove(position);
         notifyItemRemoved(position);

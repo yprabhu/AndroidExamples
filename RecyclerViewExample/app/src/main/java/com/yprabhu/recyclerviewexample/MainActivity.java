@@ -1,5 +1,6 @@
 package com.yprabhu.recyclerviewexample;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -8,48 +9,56 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
 
-    private static final String MOCK_URL = "https://unsplash.it/200/200?image=";
+    private Button listButton;
+    private Button gridButton;
+    private Button staggeredGridButton;
 
+    public static final String TYPE = "type";
+    public static final String LIST = "type";
+    public static final String GRID = "grid";
+    public static final String STAGGERED_GRID = "staggered_grid";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        listButton = (Button) findViewById(R.id.list_button);
+        gridButton = (Button) findViewById(R.id.grid_button);
+        staggeredGridButton = (Button) findViewById(R.id.staggered_button);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
+        listButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), RecyclerActivity.class);
+                intent.putExtra(TYPE, LIST);
+                startActivity(intent);
+            }
+        });
 
-        // specify an adapter
-        adapter = new MyRecyclerAdapter(getFakeData(), R.layout.view_item);
-        recyclerView.setAdapter(adapter);
+        gridButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), RecyclerActivity.class);
+                intent.putExtra(TYPE, GRID);
+                startActivity(intent);
+            }
+        });
 
-        // use a linear layout manager
-        layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        staggeredGridButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), RecyclerActivity.class);
+                intent.putExtra(TYPE, STAGGERED_GRID);
+                startActivity(intent);
+            }
+        });
     }
-
-    private List<ViewModel> getFakeData() {
-        List<ViewModel> items = new ArrayList<ViewModel>();
-        String url;
-        for (int i = 20; i < 33; i++) {
-            url = MOCK_URL + i;
-            Log.d(MainActivity.class.getSimpleName(), "URL: " +url);
-            items.add(new ViewModel(i, "Image " + (i + 1), url));
-        }
-        return items;
-    }
-
 }
