@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,9 @@ public class RecyclerActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private static final String MOCK_URL = "https://unsplash.it/200/200?image=";
+    private static final String FAKE_URL = "https://unsplash.it/200/200?image=";
+    private static final int GRID_SPAN = 2;
+    private static final int STAGGERED_GRID_SPAN = 3;
 
 
     @Override
@@ -32,22 +35,32 @@ public class RecyclerActivity extends AppCompatActivity {
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
 
-
-
         Intent intent = getIntent();
         String type = intent.getStringExtra(MainActivity.TYPE);
 
+        List<String> items = getFakeStaggeredData();
 
         if (type.equals(MainActivity.GRID)) {
-            adapter = new RecyclerAdapter(getFakeData(), R.layout.grid_view_item);
+            adapter = new RecyclerAdapter(getFakeData(), R.layout.grid_view_item, new RecyclerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(ViewModel item) {
+                    Toast.makeText(getApplicationContext(), "Item Clicked", Toast.LENGTH_LONG).show();
+                }
+            });
             recyclerView.setAdapter(adapter);
-            layoutManager = new GridLayoutManager(this, 2);
+            layoutManager = new GridLayoutManager(this, GRID_SPAN);
         } else if (type.equals(MainActivity.STAGGERED_GRID)) {
-            adapter = new StaggeredRecyclerAdapter(getFakeStaggeredData(), R.layout.text_view_item);
+            adapter = new StaggeredRecyclerAdapter(items, R.layout.text_view_item);
             recyclerView.setAdapter(adapter);
-            layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+            layoutManager = new StaggeredGridLayoutManager(STAGGERED_GRID_SPAN, StaggeredGridLayoutManager.VERTICAL);
+
         } else {
-            adapter = new RecyclerAdapter(getFakeData(), R.layout.list_view_item);
+            adapter = new RecyclerAdapter(getFakeData(), R.layout.list_view_item, new RecyclerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(ViewModel item) {
+                    Toast.makeText(getApplicationContext(), "Item Clicked", Toast.LENGTH_LONG).show();
+                }
+            });
             recyclerView.setAdapter(adapter);
             layoutManager = new LinearLayoutManager(this);
         }
@@ -60,7 +73,7 @@ public class RecyclerActivity extends AppCompatActivity {
         List<ViewModel> items = new ArrayList<>();
         String url;
         for (int i = 10; i < 20; i++) {
-            url = MOCK_URL + i;
+            url = FAKE_URL + i;
             Log.d(MainActivity.class.getSimpleName(), "URL: " +url);
             items.add(new ViewModel(i, "Image " + (i - 9), url));
         }

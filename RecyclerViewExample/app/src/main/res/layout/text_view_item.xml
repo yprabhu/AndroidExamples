@@ -8,4 +8,5 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:padding="@dimen/spacing"
+    android:textSize="20sp"
     tools:text="Some text" />
